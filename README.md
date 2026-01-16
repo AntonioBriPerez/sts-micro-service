@@ -45,7 +45,7 @@ El sistema se compone de dos microservicios que no comparten contraseñas ni bas
 ├── start.sh            # Script de automatización "Zero-Install"
 ├── .gitignore          # Reglas de seguridad (Ignora claves privadas)
 └── README.md           # Documentación
-
+```
 ## ⚙️ Cómo usar este proyecto
 
 Este laboratorio sigue la filosofía **"Zero Host Install"**. No necesitas instalar Go, Python ni OpenSSL en tu máquina local. Todo el entorno de construcción y despliegue se gestiona mediante contenedores y el script de automatización.
