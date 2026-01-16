@@ -45,7 +45,7 @@ El sistema se compone de dos microservicios que no comparten contraseñas ni bas
 ├── start.sh            # Script de automatización "Zero-Install"
 ├── .gitignore          # Reglas de seguridad (Ignora claves privadas)
 └── README.md           # Documentación
-```
+``
 ## ⚙️ Cómo usar este proyecto
 
 Este laboratorio sigue la filosofía **"Zero Host Install"**. No necesitas instalar Go, Python ni OpenSSL en tu máquina local. Todo el entorno de construcción y despliegue se gestiona mediante contenedores y el script de automatización.
@@ -84,3 +84,32 @@ El script `start.sh` incluido actúa como orquestador de todo el ciclo de vida. 
     ```bash
     kubectl get pods
     ```
+
+### 🔌 Comandos de Prueba (cURL)
+
+Asegúrate de tener los túneles `port-forward` activos antes de ejecutar estos comandos.
+
+**1. Registrar un nuevo usuario (STS)**
+Crea una identidad en la base de datos volátil del STS.
+
+```bash
+curl -i -X POST http://localhost:8080/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "antonio", "password": "password123", "role": "admin"}'
+```
+** 2. Iniciar sesión y Obtener Token (STS) Autentícate para recibir el JWT firmado.
+```bash
+curl -v -X POST http://localhost:8080/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "antonio", "password": "password123"}'
+```
+** 3. Acceder al Recurso Protegido (App Python) Usa el token para acceder al endpoint seguro. La App validará la firma consultando al STS internamente.
+```bash
+# IMPORTANTE: Reemplaza <TU_TOKEN> con el token real obtenido en el paso anterior
+curl -v http://localhost:3000/secreto \
+  -H "Authorization: Bearer <TU_TOKEN>"
+```
+** 4. (Opcional) Ver Clave Pública Verifica que el STS está exponiendo su clave pública correctamente.
+```
+curl http://localhost:8080/public-key
+``
