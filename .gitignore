@@ -1,0 +1,22 @@
+# --- .gitignore ---
+
+# 1. SEGURIDAD (CRÍTICO)
+keys/
+*.pem
+*.key
+*.crt
+
+# 2. Archivos compilados y binarios
+sts-core/sts-server
+*.exe
+*.o
+
+# 3. Python (Basura)
+__pycache__/
+*.pyc
+app-client/venv/
+.pytest_cache/
+
+# 4. Logs y temporales
+*.log
+.DS_Store

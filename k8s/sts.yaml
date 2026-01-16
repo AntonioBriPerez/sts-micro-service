@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sts-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sts
+  template:
+    metadata:
+      labels:
+        app: sts
+    spec:
+      containers:
+      - name: sts-container
+        image: mi-sts:latest
+        imagePullPolicy: Never  # IMPORTANTE: Usa la imagen local, no intentes bajarla de internet
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: keys-volume
+          mountPath: "/keys"    # Donde el código Go espera encontrar la clave (../keys)
+          readOnly: true
+      volumes:
+      - name: keys-volume
+        secret:
+          secretName: sts-secret # Montamos el secreto creado en el Paso 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sts-service # Este será el nombre DNS interno
+spec:
+  selector:
+    app: sts
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-cliente
+  template:
+    metadata:
+      labels:
+        app: app-cliente
+    spec:
+      containers:
+      - name: app-container
+        image: mi-app-python:latest   # La imagen que acabamos de importar
+        imagePullPolicy: Never    # Vital para que no intente bajarla de internet
+        ports:
+        - containerPort: 3000
+        env:
+        - name: STS_URL
+          # Aquí usamos el DNS interno de Kubernetes. 
+          # La App buscará al servicio "sts-service" en el puerto 80.
+          value: "http://sts-service/public-key"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  selector:
+    app: app-cliente
+  ports:
+    - protocol: TCP
+      port: 80         # Puerto expuesto dentro del clúster
+      targetPort: 3000 # Puerto real del contenedor Python
