@@ -84,15 +84,3 @@ El script `start.sh` incluido actúa como orquestador de todo el ciclo de vida. 
     ```bash
     kubectl get pods
     ```
-
-### 🔌 Comandos de Prueba (cURL)
-
-Asegúrate de tener los túneles `port-forward` activos antes de ejecutar estos comandos.
-
-**1. Registrar un nuevo usuario (STS)**
-Crea una identidad en la base de datos volátil del STS.
-
-```bash
-curl -i -X POST http://localhost:8080/register \
-  -H "Content-Type: application/json" \
-  -d '{"username": "antonio", "password": "password123", "role": "admin"}'
