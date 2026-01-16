@@ -12,6 +12,7 @@ echo -e "${GREEN}>>> 2. Generando claves RSA nuevas (Sin OpenSSL local)...${NC}"
 docker run --rm -v "$(pwd)/keys:/keys" -w /keys alpine/openssl \
   genrsa -out sts_privada.pem 2048
 
+chmod 600 keys/sts_privada.pem
 echo -e "${GREEN}>>> 3. Construyendo Imágenes Docker...${NC}"
 docker build -t mi-sts:latest ./sts-core
 docker build -t mi-app-python:latest ./app-client
