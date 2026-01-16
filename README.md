@@ -45,3 +45,42 @@ El sistema se compone de dos microservicios que no comparten contraseñas ni bas
 ├── start.sh            # Script de automatización "Zero-Install"
 ├── .gitignore          # Reglas de seguridad (Ignora claves privadas)
 └── README.md           # Documentación
+
+## ⚙️ Cómo usar este proyecto
+
+Este laboratorio sigue la filosofía **"Zero Host Install"**. No necesitas instalar Go, Python ni OpenSSL en tu máquina local. Todo el entorno de construcción y despliegue se gestiona mediante contenedores y el script de automatización.
+
+### Requisitos Previos
+
+* **Sistema Operativo:** Linux (Debian/Ubuntu) o Windows con WSL2.
+* **Docker:** Motor de contenedores activo.
+* **Kubernetes:** Un clúster funcional (se recomienda **K3s** por su ligereza).
+* **Kubectl:** Configurado para conectar con tu clúster.
+
+### Instalación Automática
+
+El script `start.sh` incluido actúa como orquestador de todo el ciclo de vida. Realiza las siguientes tareas secuencialmente:
+1.  Genera nuevas claves RSA usando un contenedor efímero de OpenSSL.
+2.  Compila las imágenes Docker de los microservicios.
+3.  Importa las imágenes al registro interno de K3s (Containerd).
+4.  Crea los Secretos y aplica los manifiestos de Kubernetes.
+
+**Pasos para desplegar:**
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd proyecto-sts
+    ```
+
+2.  **Lanzar el entorno:**
+    ```bash
+    chmod +x start.sh
+    ./start.sh
+    ```
+
+3.  **Verificar el despliegue:**
+    Al finalizar el script, asegúrate de que ambos servicios (`sts-deployment` y `app-deployment`) estén en estado `Running`:
+    ```bash
+    kubectl get pods
+    ```
